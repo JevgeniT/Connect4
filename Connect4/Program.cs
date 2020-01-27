@@ -1,4 +1,4 @@
-﻿using System;
+﻿
 
 namespace Connect4
 {
@@ -6,7 +6,9 @@ namespace Connect4
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+             new Menu().Run();
+
         }
+        
     }
 }
