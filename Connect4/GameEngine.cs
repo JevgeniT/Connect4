@@ -7,27 +7,28 @@ namespace Connect4
 {
     public class GameEngine
     {
-          private int _player ;
-        public int Score { get; set; }
-        public static char[,] Field { get; set; }
+        private int _player ;
+        private int Score { get; set; }
+        private static char[,] Field { get; set; }
 
         public GameEngine(Settings settings)
         {
             Field = settings.Field;
             Score = settings.Score;
         }
-        
-        
-        
-        public static int GetRow()
+
+
+        private static int GetRow()
         {
          return GameField().GetUpperBound(0) + 1;
         }
-        public static int GetCol()
+
+        private static int GetCol()
         {
             return GameField().Length / GetRow();
         }
-        public static char[,] GameField()
+
+        private static char[,] GameField()
         {    
             return Field;
         }
@@ -36,14 +37,8 @@ namespace Connect4
            Console.Clear();
             for (int j = 0; j < GetCol(); j++)
             {
-                if (_player == j)
-                {
-                    Console.Write("x\t");
-                }
-                else
-                {
-                    Console.Write(" \t");
-                }
+                
+                Console.Write(_player==j?"x\t":" \t");
             }
 
             Console.WriteLine();
@@ -58,19 +53,11 @@ namespace Connect4
 
                 Console.WriteLine();
             }
-
-           
-          
-
         }
 
         private void MakeMove(int pos, bool isHuman)
         {
-            char playerChar = 'x';
-            if (!isHuman)
-            {
-                playerChar = 'o';
-            }
+            char playerChar = isHuman?'x':'o';
             
             for (int i = GetRow()-1; i >=0; i--)
             {
@@ -91,7 +78,7 @@ namespace Connect4
                 char check;
                 for (int col = 0; col < GetCol(); col++)
                 {
-                    if (Char.IsLetter(GameField()[row, col]))
+                    if (char.IsLetter(GameField()[row, col]))
                     {
                         check = GameField()[row, col];
                     }
@@ -146,20 +133,19 @@ namespace Connect4
             Random random = new Random();
             
             List<int> unique = new List<int>();
-            unique.Clear();
-            for (int i = 0; i < GetRow()-1 ; i++)
+            for (int i = 0; i <= GetRow() ; i++)
             {
-                if (!Char.IsLetterOrDigit(GameField()[i,0]))
+                if (!Char.IsLetterOrDigit(GameField()[0,i]))
                 {
                     unique.Add(i);
                 }
             }
 
             var computer = unique.OrderBy(x => random.Next()).Take(3);
-           
             
-            MakeMove(computer.ElementAt(0),false);
+             MakeMove(computer.ElementAt(0),false);
             
+          
         }
         public void Run()
         {
@@ -174,39 +160,48 @@ namespace Connect4
             do
             {
                 ConsoleKeyInfo pressedKey = Console.ReadKey();
-                if (pressedKey.Key.ToString() == "A" && _player>0)
+                switch (pressedKey.Key.ToString())
                 {
-                    _player--;
-                    DrawField();
-                }
-                else if (pressedKey.Key.ToString() == "D" && _player < GetCol()-1)
-                {
-                    _player++;
-                    DrawField();
-                }
-                else if (pressedKey.Key.ToString() == "R" )
-                {
-                    MakeMove(_player,true);
-                    ComputerMove();
-             
-                } else if (pressedKey.Key.ToString() == "G" )
-                {
-                    Menu menu = new Menu();
-                    menu.Run();
-
-                } else if (pressedKey.Key.ToString() == "V" )
-                {
-                    Config config = new Config()
+                    case "A" when _player>0:
+                        _player--;
+                        DrawField();
+                        break;
+                    case "D" when _player < GetCol()-1:
+                        _player++;
+                        DrawField();
+                        break;
+                    case "R":
+                        MakeMove(_player,true);
+                        ComputerMove();
+                        break;
+                    case "G":
                     {
-                        Score = Score,
-                        NewField = GameField()
-                    };
-                    config.Save(JsonConvert.SerializeObject(config));
+                        Menu menu = new Menu();
+                        menu.Run();
+                        break;
+                    }
+                    case "V":
+                    {
+                        Config config = new Config()
+                        {
+                            Score = Score,
+                            NewField = GameField()
+                        };
+                        config.Save(JsonConvert.SerializeObject(config));
+                        break;
+                    }
+                    default:
+                        DrawField();
+                        break;
+                    
                 }
-                else
+
+                if (IsWin())
                 {
-                    DrawField();
+                    Console.WriteLine("win");
+                    Console.ReadKey();
                 }
+            
             } while (Score>=GameField().Length ||  !IsWin());
             Console.WriteLine("Field is full");
         }//end Run

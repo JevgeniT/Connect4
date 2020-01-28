@@ -5,11 +5,11 @@ namespace Connect4
 {
     public class Menu
     {
-                private static int _index;
+        private static int _index;
         private readonly List<string> _mainMenuItems = new List<string> {"New Game", "Resume Game", "Settings", "Exit"};
         private readonly List<string> _settingsMenu = new List<string> {"Set Length", "Set Width", "Back"};
         private readonly List<string> _savedGames = new Config().ListAll();
-        private static Settings _settings = new Settings();
+        private static Settings _settings ;
       
 
         public void Run()
