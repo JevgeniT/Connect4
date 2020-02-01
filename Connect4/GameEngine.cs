@@ -1,6 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using Newtonsoft.Json;
 
 namespace Connect4
@@ -20,24 +21,19 @@ namespace Connect4
 
         private static int GetRow()
         {
-         return GameField().GetUpperBound(0) + 1;
+         return Field.GetUpperBound(0) + 1;
         }
 
         private static int GetCol()
         {
-            return GameField().Length / GetRow();
+            return Field.Length / GetRow();
         }
-
-        private static char[,] GameField()
-        {    
-            return Field;
-        }
+        
         private void DrawField()
         {    
            Console.Clear();
             for (int j = 0; j < GetCol(); j++)
             {
-                
                 Console.Write(_player==j?"x\t":" \t");
             }
 
@@ -47,7 +43,7 @@ namespace Connect4
                 Console.Write("|");
                 for (int j = 0; j < GetCol(); j++)
                 {
-                    Console.Write($"{GameField()[i, j]} \t");
+                    Console.Write($"{Field[i, j]} \t");
                 }
                 Console.Write("|");
 
@@ -61,9 +57,9 @@ namespace Connect4
             
             for (int i = GetRow()-1; i >=0; i--)
             {
-                if (!Char.IsLetterOrDigit(GameField()[i,pos]))
+                if (!Char.IsLetterOrDigit(Field[i,pos]))
                 {
-                    GameField()[i,pos] = playerChar;
+                    Field[i,pos] = playerChar;
                     Score++;
                     break;
                 }
@@ -78,18 +74,13 @@ namespace Connect4
                 char check;
                 for (int col = 0; col < GetCol(); col++)
                 {
-                    if (char.IsLetter(GameField()[row, col]))
-                    {
-                        check = GameField()[row, col];
-                    }
-                    else
+                    if (!char.IsLetter(Field[row, col]))
                     {
                         continue;
                     }
-                    if (col <= GetCol() - 4 &&
-                        check == GameField()[row, col + 1] &&
-                        check == GameField()[row, col + 2] &&
-                        check == GameField()[row, col + 3])
+                    check = Field[row, col];
+                 
+                    if (col <= GetCol() - 4 && CheckRow(check, row , col))
                     {
                         return true;
                     }
@@ -102,20 +93,17 @@ namespace Connect4
                     }
 
                     if (row <= GetRow() - 3 &&
-                        col <= GetCol() - 3 &&
-                        check == GameField()[row + 1, col + 1] &&
-                        check == GameField()[row + 2, col + 2] &&
-                        check == GameField()[row + 3, col + 3])
+                        col <= GetCol() - 3 && CheckTopDownDiagonal(check, row, col))
                     {
                         return true;
                     }
                 }
 
-                for (int i = GetCol() - 1; i >= 0; i--)
+                for (int col = GetCol() - 1; col >= 0; col--)
                 {
-                    check = GameField()[row, i];
+                    check = Field[row, col];
                     if (row <= GetRow() - 3 &&
-                        i >  GetCol() - 4 &&
+                        col >  GetCol() - 4 &&
                         char.IsLetter(check)&&
                         check == GameField()[row + 1, i - 1] &&
                         check == GameField()[row + 2, i - 2] &&
@@ -135,7 +123,7 @@ namespace Connect4
             List<int> unique = new List<int>();
             for (int i = 0; i <= GetRow() ; i++)
             {
-                if (!Char.IsLetterOrDigit(GameField()[0,i]))
+                if (!Char.IsLetterOrDigit(Field[0,i]))
                 {
                     unique.Add(i);
                 }
@@ -182,10 +170,10 @@ namespace Connect4
                     }
                     case "V":
                     {
-                        Config config = new Config()
+                        Config config = new Config
                         {
                             Score = Score,
-                            NewField = GameField()
+                            Field = Field
                         };
                         config.Save(JsonConvert.SerializeObject(config));
                         break;
@@ -202,7 +190,7 @@ namespace Connect4
                     Console.ReadKey();
                 }
             
-            } while (Score>=GameField().Length ||  !IsWin());
+            } while (Score>=Field.Length ||  !IsWin());
             Console.WriteLine("Field is full");
         }//end Run
     
