@@ -67,6 +67,25 @@ namespace Connect4
             DrawField();
         }
 
+        private bool CheckColumn(char toCheck, int row, int col)
+        {
+            return toCheck == Field[row+1, col ] && toCheck == Field[row+2, col ] && toCheck == Field[row+3, col ];
+        }
+
+        private bool CheckRow(char toCheck, int row, int col)
+        { 
+            return toCheck == Field[row, col+1 ] && toCheck == Field[row, col +2] && toCheck == Field[row, col+3 ];
+        }
+
+        private bool CheckTopDownDiagonal(char toCheck,int row, int col)
+        {
+            return toCheck == Field[row+1, col + 1] && toCheck == Field[row+2, col + 2] && toCheck == Field[row+3, col + 3];
+        }
+
+        private bool CheckBottomUpDiagonal(char toCheck,int row, int col)
+        {
+            return toCheck == Field[row+1, col - 1] && toCheck == Field[row+2, col - 2] && toCheck == Field[row+3, col - 3];
+        }
         private bool IsWin()
         {
             for (int row = 0; row < GetRow(); row++)
@@ -84,10 +103,7 @@ namespace Connect4
                     {
                         return true;
                     }
-                    if (row < GetRow() - 3 &&
-                        check == GameField()[row + 1, col] &&
-                        check == GameField()[row + 2, col] &&
-                        check == GameField()[row + 3, col])
+                    if (row < GetRow() - 3 && CheckColumn(check, row, col))
                     {
                         return true;
                     }
@@ -105,9 +121,8 @@ namespace Connect4
                     if (row <= GetRow() - 3 &&
                         col >  GetCol() - 4 &&
                         char.IsLetter(check)&&
-                        check == GameField()[row + 1, i - 1] &&
-                        check == GameField()[row + 2, i - 2] &&
-                        check == GameField()[row + 3, i - 3])
+                        CheckBottomUpDiagonal(check,row,col)
+                        )
                     {
                         return true;
                     }
