@@ -9,7 +9,7 @@ namespace Connect4
         private readonly List<string> _mainMenuItems = new List<string> {"New Game", "Resume Game", "Settings", "Exit"};
         private readonly List<string> _settingsMenu = new List<string> {"Set Length", "Set Width", "Back"};
         private readonly List<string> _savedGames = new Config().ListAll();
-        private static Settings _settings ;
+        private  static Settings _settings = new Settings();
       
 
         public void Run()
@@ -23,7 +23,7 @@ namespace Connect4
                 switch (menuItem)  //main menu switch
                 {
                     case "New Game":
-                        _settings = new Settings();
+                         _settings = new Settings();
                         GameEngine gameEngine = new GameEngine(_settings);
                         gameEngine.Run();
                         break;
