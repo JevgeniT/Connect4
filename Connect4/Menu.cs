@@ -37,10 +37,10 @@ namespace Connect4
                             switch (menuItem) // settings switch 
                             {
                                 case "Set Length":
-                                    _settings.GetLength();
+                                    _settings.SetLength();
                                     break;
                                 case "Set Width":
-                                    _settings.GetWidth();
+                                    _settings.SetWidth();
                                     break;
                                 case "Back":
                                 Console.Clear();
@@ -53,7 +53,7 @@ namespace Connect4
                     case "Resume Game":
                         _index = 0;
                         _savedGames.Add("Back");
-                        var jsonLoop = true;
+                        var resumeLoop = true;
                         do
                         { 
                             menuItem = DrawListMenu(_savedGames);
@@ -65,13 +65,12 @@ namespace Connect4
                                 
                                 gameEngine.Run();
                             }
-
                             else if (menuItem == "Back")
                             {
-                                jsonLoop = false;
+                                resumeLoop = false;
                                 _savedGames.Remove("Back");
                             }
-                        } while (jsonLoop);
+                        } while (resumeLoop);
                         break;
                         
                     case "Exit":
@@ -92,20 +91,22 @@ namespace Connect4
 
             
             ConsoleKeyInfo ckey = Console.ReadKey();
-            if (ckey.Key.ToString() == "S" && _index < items.Count-1)
+            switch (ckey.Key.ToString())
             {
-               _index++;
-            }
-            
-            else if (ckey.Key.ToString() == "W" && _index > 0)
-            {
-                _index--;
-            }
-            
-            else if (ckey.Key == ConsoleKey.Enter)
-            {
-                
-                return items[_index];
+                case "S" when _index < items.Count-1:
+                    _index++;
+                    break;
+                case "W" when _index > 0:
+                    _index--;
+                    break;
+                default:
+                {
+                    if (ckey.Key == ConsoleKey.Enter)
+                    {
+                        return items[_index];
+                    }
+                    break;
+                }
             }
             return "";
         }

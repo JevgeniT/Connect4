@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Newtonsoft.Json;
 
 namespace Connect4
@@ -18,36 +19,34 @@ namespace Connect4
         }
 
 
-        private static int GetRow()
+        private static int RowLength()
         {
             return Field.GetUpperBound(0) + 1;
         }
 
-        private static int GetCol()
+        private static int ColLength()
         {
-            return Field.Length / GetRow();
+            return Field.Length / RowLength();
         }
 
         private void DrawField()
         {
             Console.Clear();
-            for (int j = 0; j < GetCol(); j++)
+            for (int j = 0; j < ColLength(); j++)
             {
-                Console.Write(_player == j ? "x\t" : " \t");
+                Console.Write(_player == j ? "  x" : "   ");
             }
 
             Console.WriteLine();
-            for (int i = 0; i < GetRow(); i++)
+            for (int i = 0; i < RowLength(); i++)
             {
-                Console.Write("|");
-                for (int j = 0; j < GetCol(); j++)
+                StringBuilder sb = new StringBuilder("|");
+                for (int j = 0; j < ColLength(); j++)
                 {
-                    Console.Write($"{Field[i, j]} \t");
+                    sb.Append($" {Field[i, j]} ");
                 }
-
-                Console.Write("|");
-
-                Console.WriteLine();
+                sb.Append("|\n");
+                Console.Write(sb);
             }
         }
 
@@ -55,9 +54,9 @@ namespace Connect4
         {
             char playerChar = isHuman ? 'x' : 'o';
 
-            for (int i = GetRow() - 1; i >= 0; i--)
+            for (int i = RowLength() - 1; i >= 0; i--)
             {
-                if (!Char.IsLetterOrDigit(Field[i, pos]))
+                if(!char.IsLetterOrDigit(Field[i, pos]))
                 {
                     Field[i, pos] = playerChar;
                     Score++;
@@ -72,8 +71,7 @@ namespace Connect4
         {
             int[] rx = checkRow ? new[] {1, 2, 3} : !checkCol && !checkRow ? new[] {1, 2, 3} : new[] {0, 0, 0};
             int[] cx = checkCol ? new[] {1, 2, 3} : !checkCol && !checkRow ? new[] {-1, -2, -3} : new[] {0, 0, 0};
-
-
+            
             return toCheck == Field[row + rx[0], col + cx[0]] &&
                    toCheck == Field[row + rx[1], col + cx[1]] &&
                    toCheck == Field[row + rx[2], col + cx[2]];
@@ -81,26 +79,25 @@ namespace Connect4
 
         private bool IsWin()
         {
-            for (int row = 0; row < GetRow(); row++)
+            for (int row = 0; row < RowLength(); row++)
             {
                 char check;
-                for (int col = 0; col < GetCol(); col++)
+                for (int col = 0; col < ColLength(); col++)
                 {
                     if (!char.IsLetter(Field[row, col]))
                     {
                         continue;
                     }
-
                     check = Field[row, col];
-                    if (col < GetCol() - 3 && Check(check, row, col, false, true)
-                        || row < GetRow() - 3 && Check(check, row, col, true, false)
-                        || (row < GetRow() - 3 && col < GetCol() - 3 && Check(check, row, col, true, true))
-                        || row < GetRow() - 3 && col >= GetCol() - 4 && Check(check, row, col, false, false))
-                    {
-                        Console.WriteLine(check == 'x' ? "You win!" : "You Lose");
-                        Console.ReadKey();
-                        return true;
-                    }
+
+                    if ((col >= ColLength() - 3 || !Check(check, row, col, false, true)) &&
+                        (row >= RowLength() - 3 || !Check(check, row, col, true, false)) &&
+                        (row >= RowLength() - 3 || col >= ColLength() - 3 || !Check(check, row, col, true, true)) &&
+                        (row >= RowLength() - 3 || col < ColLength() - 4 || !Check(check, row, col, false, false)))
+                        continue;
+                    Console.WriteLine(check == 'x' ? "You win!" : "You Lose");
+                    Console.ReadKey();
+                    return true;
                 }
             }
 
@@ -112,7 +109,7 @@ namespace Connect4
             Random random = new Random();
             List<int> unique = new List<int>();
 
-            for (int i = 0; i < GetRow(); i++)
+            for (int i = 0; i < RowLength(); i++)
             {
                 if (!Char.IsLetterOrDigit(Field[0, i]))
                 {
@@ -126,11 +123,12 @@ namespace Connect4
 
         public void Run()
         {
+            
             DrawField();
-
             Console.WriteLine("---Press A to move left");
             Console.WriteLine("---Press D to move right");
             Console.WriteLine("---Press R to make move");
+            Console.WriteLine("---Press G for main menu");
             Console.WriteLine("---Press V to save current game");
 
             do
@@ -142,7 +140,7 @@ namespace Connect4
                         _player--;
                         DrawField();
                         break;
-                    case "D" when _player < GetCol() - 1:
+                    case "D" when _player < ColLength() - 1:
                         _player++;
                         DrawField();
                         break;

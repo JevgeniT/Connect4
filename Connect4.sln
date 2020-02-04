@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Connect4", "Connect4\Connect4.csproj", "{A886431E-B6FD-40C8-A264-8591B92C48AE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConnectTest", "ConnectTest\ConnectTest.csproj", "{E1573C13-6D31-488A-AFCB-93F3F62BBD4D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{A886431E-B6FD-40C8-A264-8591B92C48AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A886431E-B6FD-40C8-A264-8591B92C48AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A886431E-B6FD-40C8-A264-8591B92C48AE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E1573C13-6D31-488A-AFCB-93F3F62BBD4D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E1573C13-6D31-488A-AFCB-93F3F62BBD4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E1573C13-6D31-488A-AFCB-93F3F62BBD4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E1573C13-6D31-488A-AFCB-93F3F62BBD4D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

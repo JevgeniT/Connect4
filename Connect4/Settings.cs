@@ -10,43 +10,39 @@ namespace Connect4
 
         private static int Width { get; set; } = 7;
 
-
         public int Score { get; set; }
 
 
-        public void GetLength()
+        public void SetLength()
         {
             Console.Write("Enter field length: ");
             var length = Console.ReadLine();
-            int x;
-            if (length != null && int.TryParse(length, out x) && x < 12)
+            if (length != null && int.TryParse(length, out var x) && x < 12 && x>6)
             {
                 Length = x;
                 Console.WriteLine("Length has been changed to {0}", Length);
             }
             else
             {
-                Console.WriteLine("Cannot be less than 6,empty or non-integer");
+                Console.WriteLine("Invalid input! Must be integer between 6-12");
             }
 
             Console.ReadKey();
         }
 
-        public void GetWidth()
+        public void SetWidth()
         {
             Console.Write("Enter field width: ");
             var width = Console.ReadLine();
-            int x;
-            if (width != null && int.TryParse(width, out x) && x < 12)
+            if (width != null && int.TryParse(width, out var x) && x < 12 && x>7)
             {
                 Width = x;
                 Console.WriteLine("Width has been changed to {0}", Width);
             }
             else
             {
-                Console.WriteLine("Cannot be less than 7,empty or non-integer");
+                Console.WriteLine("Invalid input! Must be integer between 7-12");
             }
-
             Console.ReadKey();
         }
     }
